@@ -1,0 +1,296 @@
+@font-face
+{
+    font-family: 'FontAwesome';
+    src: url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/fonts/fontawesome-webfont.ttf?v=4.7.0');
+}
+
+.container {
+	max-width: 900px;
+	padding: 15px;
+	margin: 0 auto;
+	border-bottom: 1px solid gray;
+}
+
+.container:after {
+	content: "";
+	display: block;
+	clear: both; /* Как вычисляется величина?  */
+}
+
+.logo {
+	width: 180px ;
+	float: right;
+}
+
+.text-logo{
+	width: 60%;
+	float: left;
+}
+
+nav h1{
+	font-family:FontAwesome; 
+	font-weight:bold;
+}
+
+nav a {
+	color:#277EBF;
+	text-decoration: none;
+	line-height: 35px;
+	font-family:FontAwesome; 
+	font-weight:bold;
+	font-size:18px;
+}
+
+nav ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+nav li {
+	padding: 0 5px;
+	display: inline-block; 
+}
+
+input {
+outline:none;
+}
+input ~ label
+{
+    cursor: pointer;
+}
+
+input[name=payment] + label,
+input[name=choose-bank] + label
+{
+    color:#277EBF;
+    display: inline-block;
+    padding: 5px;
+}  
+
+input[type=radio],
+input[value=payment-request]:not(:checked) ~ .payment-request,
+input[value=pay]:not(:checked) ~ .pay,
+input[value=another-way]:not(:checked) ~ .another-way,
+input[value=main-info]:not(:checked) ~ .main-info
+{
+    display: none;
+}
+
+input[name=choose-bank]:checked + label
+{
+    color: #000;
+    background-color: lightgrey;
+    border-radius: 5px;
+}
+
+input[value=main-info] + label:before
+{
+    font-family: FontAwesome;
+    content: '\f09d';
+    margin: 5px;
+}
+
+input[value=another-way] + label:before
+{
+    font-family: FontAwesome;
+    content: '\f19c';
+	margin: 5px;
+}
+
+.payment-request,
+.pay
+{
+    max-width:100%;
+    margin-top: 20px;
+}
+
+.card
+{
+	background: #f7f7f7;
+    display: inline-block;
+    width: 30%;
+    padding: 5px;
+    margin-right: 30px;
+    border-radius: 5px;
+    box-shadow: 2px 2px 20px grey;
+}
+
+.card > .card-logo
+{
+    float: right;
+    margin: 20px;
+}
+.card > .card-number
+{
+    display: block;
+    width: 80%;
+    margin: 10px;
+	text-align: center;
+}
+.card > .card-info
+{
+    width: 50px;
+    margin: 10px;
+    text-align: center;
+}
+
+.expanded-info
+{
+    width: 50%;
+    display: inline-block;
+}
+
+.form-info
+{
+    width: 100%;
+    list-style-type:none;
+}
+
+.form-info li
+{
+    padding:12px 12px 12px 0;
+}
+
+.form-info label
+{
+    vertical-align: top;
+    width:150px;
+    margin-top: 3px;
+    display:inline-block;
+    padding:3px;
+}
+
+
+input[type="text"],
+input[type="email"],
+textarea
+{
+	outline:none;
+    width:250px;
+    padding:5px 8px;
+    border: none;
+    background: none;
+    border-bottom: 1px solid lightgrey;
+}
+
+.choose-nds
+{
+    display: inline-block;
+}
+
+.choose-nds label
+{
+    margin: 0 5px;
+    display: inline;
+    color:#277EBF;
+}
+
+input[name=payment]:checked + label,
+input[name="NDS"]:checked + label
+{
+    color: #000;
+}
+
+.bank-button
+{
+    position: relative;
+    height: 45px;
+    width: 250px;
+}
+button
+{
+    position: absolute;
+    border: 2px solid  black;
+	
+    background: none;
+	border-radius: 10px;
+    height: 100%;
+    width: 100%
+}
+
+.bank-button:hover
+{
+    opacity: .5;
+}
+
+.product-info
+{
+    display: inline-block;
+    border: 1px solid lightgrey;
+    vertical-align: top;
+	cursor: pointer;
+	width: 25%;
+	height: 300px;
+	margin: 1%;
+	padding: 1%;
+}
+.container-for-images
+{
+	margin: auto;
+    width: 90%;
+}
+.product-info:hover
+{
+    box-shadow: 2px 2px 10px grey;
+}
+img.product
+{
+	width:90%;
+}
+
+img.icons{
+	width:27px; 
+	height:27px; 
+	background:url(data/sprites2.png); 
+	border-radius: 100%;
+}
+div.icons{
+	display: inline-block;
+	padding: 0 5px;
+}
+#vk{background-position:0px -1px;}
+#facebook{background-position:-27px -1px;}
+#twitter{background-position:-54px -1px;}
+
+#vk:hover{background-position:0px -30px;}
+#facebook:hover{ background-position:-27px -30px;}
+#twitter:hover{ background-position:-54px -29px;}
+
+@media screen and (max-width: 768px)
+{
+    .container,
+    .expanded-info
+    {
+        display: block;
+        width: 90%;
+    }
+
+    .logo
+    {
+		float:none;
+    }
+	.text-logo{
+		width: 100%;
+	}
+	nav li{
+		padding: 0;
+	}
+	
+    .card
+    {
+		width:100%;
+        display: block;
+    }
+
+    .choose-nds label
+    {
+        display: inline;
+    }
+
+	.product-info
+    {
+        display: block;
+        width: 50%;
+        margin: 10px auto;
+    }
+}

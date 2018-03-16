@@ -1,0 +1,264 @@
+<?php
+	session_start();
+	$form_key = 'sendmessage_form';
+	$csrf_token = '';
+	if (version_compare(PHP_VERSION, '7.0.0', '>='))
+	{
+		$csrf_token = bin2hex(random_bytes(32));
+	}
+	else 
+	{
+		if (function_exists('mcrypt_create_iv'))
+		{
+			$csrf_token = bin2hex(mcrypt_create_iv(32, MCRYPT_DEV_URANDOM));
+		} else {
+			$csrf_token = bin2hex(openssl_random_pseudo_bytes(32));
+			}
+	}
+	
+	$_SESSION['crsf_' .$form_key] = $csrf_token;
+?>
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Как влияет на поворт? -->
+	<meta charset="UTF-8" />
+	<title>Платежи</title>
+	<link rel="stylesheet" href="spastyles.css" type="text/css">
+	<script src="jquery.js"></script>
+	<script src="form.js"></script>
+</head>
+
+<body>
+<header>
+	<div class="container">	
+		<div class="logo">
+			<img src="data/logo.png" alt="logo" class="logo"></img>
+		</div>
+		<div class="text-logo">
+			<nav>
+				<h1>Индивидуальный предприниматель Якимов Михаил Викторович</h1>
+				<ul>
+					<li><a href="">+79505569438</a></li>
+					<li><a href="">mishanya221@gmail.com</a></li>
+				</ul>
+				<ul>
+					<li><a href="">Информация о компании</a></li></ul>
+				<ul>
+					<li><a href=""> Показать реквизиты</a></li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+</header>
+
+<main>
+	<div class="container">
+		<input type="radio" name="payment" id="pay" value="pay" checked>
+        <label for="pay"><strong>Заплатить</strong></label>
+        <input type="radio" name="payment" id="request-payment" value="payment-request">
+        <label for="request-payment"><strong>Запросить платёж</strong></label>
+		<div class="pay">
+            <input type="radio" name="choose-bank" id="from-any-bank" value="main-info" checked>
+            <label for="from-any-bank">С карты любого банка</label>
+            <input type="radio" name="choose-bank" id="from-my-bank" value="another-way">
+            <label for="from-my-bank">Из своего интернет-банка</label>
+			<div class="main-info">
+                <form id='payForm' action="send1.php" method="post">
+					<input type="hidden" name="crsf" value="<?php echo $csrf_token;?>">
+                    <div class="card">
+                        <div class="card-logo">
+                            <img src="data/visa.png" height="20" width="50" alt="visa" />
+                            <img src="data/mastercard.png" height="25" width="50" alt="mastercard" />
+                        </div>
+                        <input name="card-number" type="text" class="card-number" placeholder="Номер карты" required pattern="[0-9]{16}">
+                        <input name="mmgg" type="text" class="card-info" placeholder="ММ/ГГ" required pattern="[01][1-9]/[1-2][0-9]">
+                        <input name="cvc" type="text" 	class="card-info" placeholder="CVC" required pattern="[0-9]{3}">
+                    </div>
+                    <div class="expanded-info">
+                        <ul class="form-info">   
+                            <li>
+                                <label for="amount">Сумма:</label>
+                                <input name="amount" type="text" id="amount" placeholder="от 1000 до 75000 рублей" required pattern="([1-6]\d{3,4})|([7-9][0-4]\d{3})|([7-9][5-9]\d{2})|(75000)">
+                            </li>
+                            <li>
+                                <label for="comment">Комментарий:</label>
+                                <textarea name="comment" id="comment" placeholder="до 150 символов" maxlength="150"></textarea>
+                            </li>
+                            <li>
+                                <label for="email">Ваша эл. почта:</label>
+                                <input name="email" type="email" id="email" placeholder="Для квитанций об оплате">
+                            </li>
+                            <li>
+                                <div class="bank-button">
+                                    <button type="submit" id="submit">
+                                        <strong>Заплатить</strong>
+                                    </button>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+			<div class="another-way">
+                <form id='payFormMy' action="send1.php" method="post">
+				<input type="hidden" name="crsf" value="<?php echo $csrf_token;?>">
+                    <ul class="form-info">
+                        <li>
+                            <h3>Сформируйте платёжку и загрузите её в свой банк для подписи</h3>
+                        </li>
+                        <li>
+                            <label for="inn-recipient">ИНН получателя:</label>
+                            <input name="inn" type="text" id="inn-recipient" placeholder="ИНН или название плательщика" required pattern="\d{10}|\d{12}">
+                        </li>
+                        <li>
+                            <label for="bik">БИК:</label>
+                            <input name="bik" type="text" id="bik" required pattern="\d{9}">
+                        </li>
+                        <li>
+                            <label for="account-number">Номер счёта:</label>
+                            <input name="account-number" type="text" id="account-number" required pattern="\d{20}">
+                        </li>
+                        <li>
+                            <label for="for-what">За что:</label>
+                            <div class="choose-nds">
+                                <input name="for-what" type="text" id="for-what" disabled>
+                                <br>
+                                <input type="radio" id="NDS" name="NDS" value="0">
+                                <label for="NDS">Без НДС</label>
+                                <input type="radio" id="NDS-18" name="NDS" value="18">
+                                <label for="NDS-18">НДС 18%</label>
+                                <input type="radio" id="NDS-10" name="NDS" value="10">
+                                <label for="NDS-10">НДС 10%</label>
+                            </div>
+                        </li>
+                        <li>
+                            <label for="how-many">Сколько:</label>
+                            <input type="text" name="how-many" id="how-many" required pattern="([1-6]\d{3,4})|([7-9][0-4]\d{3})|([7-9][5-9]\d{2})|(75000)">
+                        </li>
+                        <li>
+                            <div class="bank-button">
+                                <button type="submit">
+                                    <strong>Получить файл для интернет-банка</strong>
+                                </button>
+                            </div>
+                        </li>
+                    </ul>
+					<input type="hidden" name="message" value="Сообщение">
+                </form>
+            </div>
+        </div>
+        <div class="payment-request">
+            <form id='createPay' action="send1.php" method="post">
+			<input type="hidden" name="crsf" value="<?php echo $csrf_token;?>">
+                <ul class="form-info">
+                    <li>
+                        <h3>Создайте платёжку, а Индивидуальный предприниматель Якимов Михаил Виктрович
+                            подпишет её у себя в Интернет-банке</h3>
+                    </li>
+                    <li>
+                        <label for="request-inn-recipient">ИНН получателя:</label>
+                        <input name="inn" type="text" id="request-inn-recipient" placeholder="ИНН или название плательщика" required pattern="\d{10}|\d{12}">
+                    </li>
+                    <li>
+                        <label for="request-BIK">БИК:</label>
+                        <input name="bik" type="text" id="request-BIK" required pattern="\d{9}">
+                    </li>
+                    <li>
+                        <label for="request-account-number">Номер счёта:</label>
+                        <input name="request-account-number" type="text" id="account-number" required pattern="\d{20}">
+                    </li>
+                    <li>
+                        <label for="request-for-what">За что:</label>
+                        <div class="choose-nds">
+                            <input name="for-what" type="text" id="request-for-what" disabled>
+                            <br>
+                            <input type="radio" id="request-NDS" name="NDS" value="0">
+                            <label for="request-NDS">Без НДС</label>
+                            <input type="radio" id="request-NDS-18" name="NDS" value="18">
+                            <label for="request-NDS-18">НДС 18%</label>
+                            <input type="radio" id="request-NDS-10" name="NDS" value="10">
+                            <label for="request-NDS-10">НДС 10%</label>
+                        </div>
+                    </li>
+                    <li>
+                        <label for="request-how-many">Сколько:</label>
+                        <input name="how-many" type="text" id="request-how-many" required pattern="([1-6]\d{3,4})|([7-9][0-4]\d{3})|([7-9][5-9]\d{2})|(75000)">
+                    </li>
+                    <li>
+                        <label for="request-phone-number">Номер телефона:</label>
+                        <input name="phone-number" type="text" id="request-phone-number" required pattern="[+](\d{11})|(\d{5})">
+                    </li>
+                    <li>
+                        <label for="request-email">Электронная почта:</label>
+                        <input name="email" type="email" id="email" placeholder="Для уведомлений об оплате">
+                    </li>
+                    <li>
+                        <div class="bank-button">
+                            <button type="submit"><strong>Создать платёж</strong></button>
+                        </div>
+                    </li>
+                </ul>
+            </form>
+        </div>
+        <div class="company-info">
+		<center>
+            <h3><a>О компании Индивидуальный предприниматель Якимов Михаил Викторович</a></h3>
+            <div class="container-for-images">
+                <div class="product-info">
+					<center>
+						<div>
+							<img class="product" src="data/falcon.png" alt="Тысячелетний сокол">
+							<p>Lego Star Wars. Капитан Фазма.</p>
+							<p>3500₽</p>
+						</div>
+					</center>
+				</div>
+                <div class="product-info">
+					<center>
+						<div>
+							<img class="product" src="data/batman.png" alt="Лего Batman">
+							<p>Lego Star Wars. Звезда Смерти</p>
+							<p>19000₽</p>
+						</div>
+					</center>
+                </div>
+                <div class="product-info">
+                    <center>
+						<div>
+							<img class="product" src="data/film.png" alt="Билет на Лего.Фильм">
+							<p>Lego Doctor Who</p>
+							<p>5000₽</p>
+						</div>
+					</center>
+                </div>
+            </div>
+			</center>
+        </div>
+		<div>
+			За свою почти 85-летнюю историю существования конструктор LEGO стал одной из самых популярных и любимых игрушек нескольких поколений во всем мире. Причем играть с конструктором нравится не только детям: многие из них, вырастая, остаются преданными фанатами игрушки и продолжают покупать все новые и новые наборы. 
+		</div>
+</div>
+</main>
+
+<footer>
+	<div class="container">
+		<center>
+			<h4>Поделиться в социальных сетях:</h4>
+				<div class="icons">
+					<a href="https://vk.com/share.php?url=" title="Поделиться в Vk" target="_blank">
+						<img class="icons" id="vk"></a>
+				</div>
+				<div class="icons">
+					<a href="http://www.facebook.com/sharer.php?url=" title="Поделиться в Facebook" target="_blank">
+						<img class="icons" id="facebook"></a>
+				</div>
+				<div class="icons">
+					<a href="http://twitter.com/share?url=" title="Поделиться в Twitter" target="_blank"	>
+						<img class="icons" id="twitter"></a>
+				</div>
+		</center>
+	</div>
+</footer>
+</body>
+</html>

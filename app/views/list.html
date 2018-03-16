@@ -1,0 +1,84 @@
+﻿
+<body>
+<input type="radio" name="payment" id="pay" value="pay" checked>
+<label for="pay"><strong>Card's pay</strong></label>
+<input type="radio" name="payment" id="request-payment" value="payment-request">
+<label for="request-payment"><strong>Req-Payment</strong></label>
+<div class="pay">
+	<div id="table-wrapper">
+		<div class="filter tools pull-right">
+			Фильтр <input ng-model="filter" class="search-query">
+		</div>
+		<table class="table table-striped">
+		<thead>
+			<tr ng-mousedown="$event.preventDefault()" onselectstart="return false">
+				<th ng-repeat="head in tablehead" ng-click="sortReorder(head.title,$event, 1)" ng-class="{'sort-asc':head.sort>0,'sort-desc':head.sort<0}">{{head.title}}</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="item in items | orderByEx:tablehead:sortBy(1) | showPage:paginator">
+				<td>{{item.id}}</a></td>
+				<td>{{item['Card Number']}}</td>
+				<td>{{item.mmgg}}</td>
+				<td>{{item.CVC}}</td>
+				<td>{{item.Sum}}</td>
+				<td>{{item.Comment}}</td>
+				<td>{{item.email}}</td>
+				<td><span class="disable-item" style="color:{{item.shown>0&&'green'||'red'}};" ng-click="disableItem()">{{item.shown>0&&'безопасный'||'небезопасный'}}</span></td>
+			</tr>
+		</tbody>
+		</table>
+		<div id="table-tools">
+			<div class="pull-left">
+				Показано {{Math.min(paginator.count,items.length)}} записей из {{items.length}}
+			</div>
+			<div class="controls input-append pull-right">
+				<input type="button" ng-click="paginator.page=1" class="btn btn-small" value="&lt;&lt;">
+				<input type="button" ng-click="paginator.page=paginator.page-1 || 1" class="btn btn-small" value="&lt;">
+				<input ng-model="paginator.page" class="paginator-page"><span class="add-on">из {{paginator.pages}} стр.</span>
+				<input type="button" ng-click="paginator.page=Math.min(paginator.page+1,paginator.pages)" class="btn btn-small" value="&gt;">
+				<input type="button" ng-click="paginator.page=paginator.pages" class="btn btn-small" value="&gt;&gt;">
+			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+</div>
+<div class="payment-request">
+	<div id="table-wrapper">
+		<div class="filter tools pull-right">
+			Фильтр <input ng-model="filter" class="search-query">
+		</div>
+		<table class="table table-striped">
+		<thead>
+			<tr ng-mousedown="$event.preventDefault()" onselectstart="return false">
+				<th ng-repeat="head in tablehead2" ng-click="sortReorder(head.title,$event, 0)" ng-class="{'sort-asc':head.sort>0,'sort-desc':head.sort<0}">{{head.title}}</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="item in items2 | orderByEx:tablehead2:sortBy(0) | showPage:paginator">
+				<td>{{item.id}}</a></td>
+				<td>{{item.inn}}</td>
+				<td>{{item.bik}}</td>
+				<td>{{item.card}}</td>
+				<td>{{item.nds}}</td>
+				<td>{{item.money}}</td>
+				<td>{{item.phone}}</td>
+				<td>{{item.email}}</td>
+			</tr>
+		</tbody>
+		</table>
+		<div id="table-tools">
+			<div class="pull-left">
+				Показано {{Math.min(paginator.count,items2.length)}} записей из {{items2.length}}
+			</div>
+			<div class="controls input-append pull-right">
+				<input type="button" ng-click="paginator2.page=1" class="btn btn-small" value="&lt;&lt;">
+				<input type="button" ng-click="paginator2.page=paginator2.page-1 || 1" class="btn btn-small" value="&lt;">
+				<input ng-model="paginator2.page" class="paginator-page"><span class="add-on">из {{paginator2.pages}} стр.</span>
+				<input type="button" ng-click="paginator2.page=Math.min(paginator2.page+1,paginator2.pages)" class="btn btn-small" value="&gt;">
+				<input type="button" ng-click="paginator2.page=paginator2.pages" class="btn btn-small" value="&gt;&gt;">
+			</div>
+		</div>
+	</div>
+</div>
+</body>
